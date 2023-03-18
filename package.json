@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.5",
+    "nodemon": "^2.0.21",
+    "require": "^2.4.20"
+  },
+  "name": "artstation-script",
+  "version": "1.0.0",
+  "description": "A node server that grabs a random image from the artstation api and displays it. You can also click forward and back and I may add some sort of automatic slideshow functionality",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dirk Teucher",
+  "license": "ISC"
+}

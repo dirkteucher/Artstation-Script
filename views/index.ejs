@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Random Artstation Image</title>
+  </head>
+  <body>
+
+    <button id="click-me" onclick="toggleVisibility()">Click Me</button>
+    <button id="stop-timer" onclick="toggleVisibility()">Stop Timer</button>
+
+    <div class="flexThreeCol">
+      <div id="back-button">
+          <
+      </div>
+      <% if (imageUrl) { %>
+        <img id="random-image" class="imageContainer" src="<%= imageUrl %>" alt="<%= title %>" />
+      <% } else { %>
+        <p>No image found.</p>
+      <% } %>
+
+      <div id="new-image-button">
+        >
+      </div>
+    </div>
+
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      .flexThreeCol {
+        display: flex;
+        justify-content: space-between;
+        overflow: hidden; /*This is to show the border radius on the buttons*/
+      }
+      .flexThreeCol div {
+        flex: 0 0 230px;
+
+      }
+      #new-image-button, #back-button {
+        background-color: #101010;
+        color: #fff;
+        text-align: center;
+        padding: 20% 0;
+        font-size: 100px;
+        cursor: pointer;
+      }
+      #new-image-button:hover, #back-button:hover {
+          background-color: #2e2e2e;
+          font-size: 102px;
+          border-radius: 12px;;
+      }
+
+      #random-image {
+        max-height: 100vh;
+      }
+      
+        /* .imageContainer {
+          max-width: 100%;
+          max-height: 100%;
+          bottom: 0;
+          left: 0;
+          margin: auto;
+          overflow: auto;
+          position: fixed;
+          right: 0;
+          top: 0;
+          -o-object-fit: contain;
+          object-fit: contain;
+        } */
+        body {
+            background-color: black;
+        }
+    </style>
+
+
+      <script>
+        const newImageButton = document.getElementById("new-image-button");
+        const randomImage = document.getElementById("random-image");
+
+
+
+
+        // If back button is pressed get the previous image
+        // Get the forward and back buttons
+        const forwardButton = document.getElementById('new-image-button');
+        const backButton = document.getElementById('back-button');
+
+        // Get the image element
+        const imageElement = document.getElementById('random-image');
+
+        // Create an empty array to store the image src values
+        const imageSrcArray = [];
+
+        // Initialize the current image index to 0
+        let currentImageIndex = 0;
+
+        // When the forward button is clicked
+        forwardButton.addEventListener('click', () => {
+          // Get the current src value of the image and store it in the array
+          const currentSrc = imageElement.getAttribute('src');
+            imageSrcArray[currentImageIndex] = currentSrc;
+
+            // Increment the current image index and update the image src attribute
+            currentImageIndex++;
+            
+            if(imageSrcArray.length == currentImageIndex ) {
+              const newSrc = getNewImageSrc();
+              if (newSrc) {
+                imageElement.setAttribute('src', newSrc);
+              }
+            }else{
+              const lastSrc = imageSrcArray[currentImageIndex];
+              imageElement.setAttribute('src', lastSrc);
+            }
+            
+        });
+
+        // When the back button is clicked
+        backButton.addEventListener('click', () => {
+          // Decrement the current image index and get the previous src value from the array
+          currentImageIndex--;
+          const lastSrc = imageSrcArray[currentImageIndex];
+
+          // If there is a previous src value, update the image src attribute
+          if (lastSrc) {
+            imageElement.setAttribute('src', lastSrc);
+          } else {
+            // If there is no previous src value, reset the current image index to 0
+            currentImageIndex++;
+          }
+        });
+
+        // A function to get the next image src value
+        function getNewImageSrc() {
+
+          let newImage;
+
+          fetch('/random-sci-fi-image-json')
+            .then(response => response.json())
+            .then(data => {
+              // Set the image src              
+              newImage = data.image_url;
+              document.getElementById("random-image").src=data.image_url
+              //Add the image that was just added to the array
+              const currentSrc = imageElement.getAttribute('src');
+              imageSrcArray[currentImageIndex] = currentSrc;
+            })
+            .catch(error => console.error(error));
+       
+            //return newImage;
+        }
+
+
+
+        // Get the button and stop button elements
+        const button = document.getElementById('click-me');
+        const stopButton = document.getElementById('stop-timer');
+
+        // Declare a variable to store the setInterval ID
+        let intervalId;
+
+        // Toggle the visibility of the buttons
+        function toggleVisibility() {
+          button.classList.toggle('hidden');
+          stopButton.classList.toggle('hidden');
+        }
+
+        // Add an event listener to the button
+        button.addEventListener('click', () => {
+          // Set a repeating timer to click another element every 1 second
+          intervalId = setInterval(() => {
+            const elementToClick = document.getElementById('new-image-button');
+            elementToClick.click();
+          }, 5000);
+
+          // Toggle the visibility of the buttons
+          toggleVisibility();
+        });
+
+        // Add an event listener to the stop button
+        stopButton.addEventListener('click', () => {
+          // Clear the repeating timer
+          clearInterval(intervalId);
+
+          // Toggle the visibility of the buttons
+          toggleVisibility();
+        });
+
+
+      </script>
+
+  </body>
+</html>
